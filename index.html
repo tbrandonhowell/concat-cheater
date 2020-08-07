@@ -97,7 +97,8 @@
                         console.log("stripping out the protocol + WWW");
                         // strip out the domain name
                         // input[x].replace(/(http|https):\/\/(.*?)/,'')
-                        strippedInput = input[x].replace(/(http|https):\/\/www\.(.*?)\//,'');
+                        // strippedInput = input[x].replace(/(http|https):\/\/www\.(.*?)\//,'');
+                        strippedInput = input[x].replace(/(http|https):\/\/www\./,'');
 
                         if (x === (input.length - 1)) {
                             output += strippedInput.trim();
