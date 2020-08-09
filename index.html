@@ -12,12 +12,19 @@
         <link rel="stylesheet" href="">
         <style>
             #urlList {
-               height: 60vh;
+               height: 50vh;
                width: 50vw;
             }
             .strike {
                 text-decoration: line-through;
                 color: red;
+            }
+            .options {
+                float: left;
+                margin-right: 3rem;
+            }
+            .clear {
+                clear: both;
             }
         </style>
     </head>
@@ -28,30 +35,45 @@
         
         <h1>Kathryn & Drew's Regex Concatenation Cheater</h1>
 
-        <p>Input your list of URLs below. One URL per line.</p>
+        
+        <div id="urlOptions" class="options">
+            <p>URL Clean-Up Options:</p>
+            <p>
+                <input type="radio" id="cleanUpNone" name="cleanUp" value="cleanUpNone" checked>Don't change anything.
+                <br>
+                <input type="radio" id="cleanUpProtocol" name="cleanUp" value="cleanUpProtocol"><span class="strike">http://</span>www.example.com/category/product
+                <br>
+                <input type="radio" id="cleanUpWww" name="cleanUp" value="cleanUpWww"><span class="strike">http://www.</span>example.com/category/product
+                <br>
+                <input type="radio" id="cleanUpMost" name="cleanUp" value="cleanUpMost"><span class="strike">http://www.example.com</span>/category/product
+                <br>
+                <input type="radio" id="cleanUpAll" name="cleanUp" value="cleanUpAll"><span class="strike">http://www.example.com/</span>category/product
+            </p>
+        </div>
+        
+        <div id="regexOptions" class="options">
+            <p>Regex Matching Options:</p>
+            <p>
+                <input type="radio" id="regexWildcard" name="regexMatch" value="regexWildcard" checked>Wildcard
+                <br>
+                <input type="radio" id="regexStrict" name="regexMatch" value="regexStrict">Strict
+            </p>
+        </div>
+        
+        <div class="clear">
+            <p>Input your list of URLs below. One URL per line.</p>
 
-        <p>URL Clean-Up Options:</p>
-        <p>
-            <input type="radio" id="cleanUpNone" name="cleanUp" value="cleanUpNone" checked>Don't change anything.
-            <br>
-            <input type="radio" id="cleanUpProtocol" name="cleanUp" value="cleanUpProtocol"><span class="strike">http://</span>www.example.com/category/product
-            <br>
-            <input type="radio" id="cleanUpWww" name="cleanUp" value="cleanUpWww"><span class="strike">http://www.</span>example.com/category/product
-            <br>
-            <input type="radio" id="cleanUpMost" name="cleanUp" value="cleanUpMost"><span class="strike">http://www.example.com</span>/category/product
-            <br>
-            <input type="radio" id="cleanUpAll" name="cleanUp" value="cleanUpAll"><span class="strike">http://www.example.com/</span>category/product
-        </p>
-
-        <form id="urlForm" name="urlForm">
-            <textarea name="urlList" form="urlForm" id="urlList"></textarea>
-        </form>
-
-        <button id="process">Process</button>
-
-        <p>Output (Automatically Copied to Clipboard):</p>
-
-        <div id="output"></div>
+            <form id="urlForm" name="urlForm">
+                <textarea name="urlList" form="urlForm" id="urlList"></textarea>
+            </form>
+    
+            <button id="process">Process</button>
+    
+            <p>Output (Automatically Copied to Clipboard):</p>
+    
+            <div id="output"></div>
+        </div>
+        
         
 
         <script src="" async defer></script>
@@ -60,6 +82,10 @@
             document.getElementById("process").onclick = function(){concatenate()};
 
             function concatenate() {
+                var matchTypeInclude = ""
+                if (document.getElementById("regexStrict").checked === true) {
+                    matchTypeInclude = "$";
+                }
                 var input = document.getElementById("urlList").value.trim().split("\n");
                 console.log(input);
                 var output = "(";
@@ -72,9 +98,9 @@
                         strippedInput = "/" + strippedInput;
 
                         if (x === (input.length - 1)) {
-                            output += strippedInput.trim();
+                            output += strippedInput.trim() + matchTypeInclude;
                         } else {
-                            output += strippedInput.trim() + "|";
+                            output += strippedInput.trim() + matchTypeInclude + "|";
                         } 
 
                     }
@@ -86,9 +112,9 @@
                         strippedInput = input[x].replace(/(http|https):\/\/(.*?)\//,'');
 
                         if (x === (input.length - 1)) {
-                            output += strippedInput.trim();
+                            output += strippedInput.trim() + matchTypeInclude;
                         } else {
-                            output += strippedInput.trim() + "|";
+                            output += strippedInput.trim() + matchTypeInclude + "|";
                         } 
 
                     }
@@ -101,9 +127,9 @@
                         strippedInput = input[x].replace(/(http|https):\/\/www\./,'');
 
                         if (x === (input.length - 1)) {
-                            output += strippedInput.trim();
+                            output += strippedInput.trim() + matchTypeInclude;
                         } else {
-                            output += strippedInput.trim() + "|";
+                            output += strippedInput.trim() + matchTypeInclude + "|";
                         } 
 
                     }
@@ -113,9 +139,9 @@
                         strippedInput = input[x].replace(/(http|https):\/\//,'');
 
                         if (x === (input.length - 1)) {
-                            output += strippedInput.trim();
+                            output += strippedInput.trim() + matchTypeInclude;
                         } else {
-                            output += strippedInput.trim() + "|";
+                            output += strippedInput.trim() + matchTypeInclude + "|";
                         } 
 
                     }
@@ -123,9 +149,9 @@
                     for(var x=0; x < input.length; x++) {
                         console.log("normal concatenation");
                         if (x === (input.length - 1)) {
-                            output += input[x].trim();
+                            output += input[x].trim() + matchTypeInclude;
                         } else {
-                            output += input[x].trim() + "|";
+                            output += input[x].trim() + matchTypeInclude + "|";
                         } 
                         
                     }
